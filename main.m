@@ -19,7 +19,7 @@ TE = 10e-3;
 TR = 2;
 
 tau = 4e-3;
-FOV= 1;   %Changed to 220 when using brain* functions    
+FOV= 8;   %Changed to 220 when using brain* functions    
 dw = res;
 kmax =  1/(2*dw);
 dk = 1/FOV;
@@ -27,6 +27,13 @@ dk = 1/FOV;
 dk = kmax/ceil(kmax/dk);
 ks = -kmax:dk:kmax-dk;
 w = gamma*B0;
+figure
+plot(ks,0,'b--o');
+axis([ks(1)-dk ks(8)+dk -0.5 0.5])
+title('Measurements trajectories and Sampling points in k-space');
+ylabel('y');
+xlabel('x');
+
 
 Gpexs = ks/(gammabar*tau);
 gx = Gradient([tp tp+tau], {Gpexs 0});
@@ -36,7 +43,8 @@ gy = Gradient([tp tp+tau TE-tau TE+tau], [Gfey1 0 Gfey2 0]);
 %%
 dt = dk/(gammabar*Gfey2);
 adc = ADC(TE-tau, TE+tau, dt);
-[S,ts] = seemri(iv,B0,rf,gx,gy,adc,TR,length(Gpexs),'Plot',false);
+figure
+[S,ts] = seemri(iv,B0,rf,gx,gy,adc,TR,length(Gpexs),'PlotKSpace',true);
 %[S1,ts1] = brain_4mm_pixel(B0,rf,gx,gy,adc,TR,length(Gpexs));
 %[S1,ts1] = brain_2mm_pixel(B0,rf,gx,gy,adc,TR,length(Gpexs));
 %%
